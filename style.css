@@ -1,0 +1,53 @@
+body {
+  background-color: #f3f3f3;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+.container {
+  margin: 50px auto;
+  width: 800px;
+  display: flex;
+  flex-direction: column;
+}
+.logo {
+  background-image: url(./LOGO.svg);
+  background-repeat: no-repeat;
+  background-size: 50%;
+  background-position: center;
+  width: 450px;
+  height: 100px;
+  order: 1;
+  margin: 0px auto;
+}
+.formulir {
+  margin: 10px auto 50px;
+  width: 400px;
+  order: 2;
+}
+.tombolSearch {
+  width: 400px;
+  margin-top: 20px;
+}
+.datahasil {
+  width: 800px;
+  margin: 20px auto;
+}
+.tombolAksi {
+  width: 800px;
+  margin: 20px auto;
+  text-align: center;
+}
+.searchVideo {
+  width: 800px;
+  margin: 20px auto;
+}
+.hasilsearch {
+  padding: 20px;
+  background-color: white;
+  border: 1px solid lightgray;
+  border-radius: 4px;
+}
+.videoSearch {
+  margin-top: 20px;
+}

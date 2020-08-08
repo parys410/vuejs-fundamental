@@ -1,0 +1,274 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Search Video</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+      integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="./style.css" />
+    <link rel="stylesheet" href="./all.min.css" />
+  </head>
+  <body>
+    <div id="app">
+      <div class="container">
+        <div class="logo"></div>
+        <div class="formulir">
+          <div class="form-group formdataurl">
+            <label for="dataurl">Video URL</label>
+            <input
+              type="text"
+              class="form-control"
+              id="dataurl"
+              name="dataurl"
+              placeholder="Alamat Platform Vidio (https://youtube.com)"
+              v-model:value="dataurl"
+            />
+          </div>
+          <div class="form-group formkatakunci">
+            <label for="katakunci">Kata Kunci</label>
+            <div class="input-group">
+              <input
+                type="text"
+                class="form-control"
+                id="katakunci"
+                name="katakunci"
+                placeholder="Kata kunci dari vidio"
+                v-model:value="katakunci"
+              />
+              <div class="input-group-append">
+                <button class="btn btn-secondary" @click="kosongkan">
+                  <i class="fas fa-undo"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tombolAksi" v-if="tampil">
+        <div class="btn-group mr-2" role="group" aria-label="Group Tombol">
+          <button
+            type="button"
+            class="btn btn-secondary pertama"
+            :disabled="!paginasi.first"
+            @click="klikpertama"
+          >
+            First
+          </button>
+          <button
+            type="button"
+            class="btn btn-secondary sebelumnya"
+            :disabled="!paginasi.prev"
+            @click="kliksebelumnya"
+          >
+            Previous
+          </button>
+          <button
+            type="button"
+            class="btn btn-secondary selanjutnya"
+            :disabled="!paginasi.next"
+            @click="klikselanjutnya"
+          >
+            Next
+          </button>
+          <button
+            type="button"
+            class="btn btn-secondary terakhir"
+            :disabled="!paginasi.last"
+            @click="klikterakhir"
+          >
+            Last
+          </button>
+        </div>
+      </div>
+
+      <div class="searchVideo" v-if="tampil">
+        <div class="hasilsearch">
+          <div class="info">
+            Terdapat <span><b>{{ total }}</b></span> hasil pencarian. Anda
+            sedang berada pada halaman ke: <span><b>{{ page }}</b></span>
+          </div>
+          <div class="videoSearch">
+            <ul class="list-group list-group-flush">
+              <li
+                class="list-group-item"
+                v-for="(hasil, indeks) in hasil"
+                :key="indeks"
+              >
+                <span v-html="hasil.text"></span>
+                <span
+                  ><a :href="`${dataurl}&t=${hasil.start}s`" target="_blank"
+                    ><i class="fas fa-external-link-square-alt"></i></a
+                ></span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="datahasil" v-if="tampil">
+        <div class="accordion" id="accordionAPI">
+          <div class="card">
+            <div class="card-header" id="headingOne">
+              <h5 class="mb-0">
+                <button
+                  class="btn btn-link"
+                  type="button"
+                  data-toggle="collapse"
+                  data-target="#collapseOne"
+                  aria-expanded="true"
+                  aria-controls="collapseOne"
+                >
+                  API
+                </button>
+              </h5>
+            </div>
+
+            <div
+              id="collapseOne"
+              class="collapse show"
+              aria-labelledby="headingOne"
+              data-parent="#accordionAPI"
+            >
+              <div class="card-body">
+                <pre>{{ jadikanString(paginasi) }}</pre>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-header" id="headingTwo">
+              <h5 class="mb-0">
+                <button
+                  class="btn btn-link collapsed"
+                  type="button"
+                  data-toggle="collapse"
+                  data-target="#collapseTwo"
+                  aria-expanded="false"
+                  aria-controls="collapseTwo"
+                >
+                  Data Object
+                </button>
+              </h5>
+            </div>
+            <div
+              id="collapseTwo"
+              class="collapse"
+              aria-labelledby="headingTwo"
+              data-parent="#accordionAPI"
+            >
+              <div class="card-body">
+                <code>
+                  <pre>{{ jadikanString(hasil) }}</pre>
+                </code>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script
+      src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+      integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+      integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+      crossorigin="anonymous"
+    ></script>
+    <script src="./index.js"></script>
+    <script>
+      new Vue({
+        el: '#app',
+        data: {
+          apiurl: 'https://cari-teks-video-api.vercel.app/api/search',
+          dataurl: 'https://www.youtube.com/watch?v=klnvttPfOUM',
+          katakunci: '',
+          hasil: [],
+          tampil: false,
+          paginasi: {
+            first: null,
+            last: null,
+            prev: null,
+            next: null,
+            total: 0,
+            page: null,
+          },
+        },
+        watch: {
+          katakunci: pDebounce(function dapatKataKunci(katakunci) {
+            this.cari(this.dataurl, katakunci);
+          }, 300),
+        },
+        methods: {
+          async cari(dataurl, katakunci, paginasi) {
+            let validurl = `${this.apiurl}?url=${encodeURIComponent(
+              this.dataurl
+            )}&q=${this.katakunci}`;
+
+            if (paginasi) {
+              validurl = paginasi;
+            }
+
+            try {
+              const response = await fetch(validurl).then((_respon) => {
+                if (_respon.ok) {
+                  return _respon.json();
+                }
+                return [];
+              });
+              this.hasil = response.data;
+              this.paginasi.first = response.first;
+              this.paginasi.next = response.next;
+              this.paginasi.prev = response.prev;
+              this.paginasi.last = response.last;
+              this.total = response.total;
+              this.page = response.page;
+
+              if (response.page > 0) {
+                this.tampil = true;
+              }
+
+              console.log(response);
+            } catch (e) {
+              console.log(e);
+            }
+          },
+          kosongkan(e) {
+            this.katakunci = '';
+            this.tampil = false;
+          },
+          klikpertama(e) {
+            this.cari(this.dataurl, this.katakunci, this.paginasi.first);
+          },
+          kliksebelumnya(e) {
+            this.cari(this.dataurl, this.katakunci, this.paginasi.prev);
+          },
+          klikselanjutnya(e) {
+            this.cari(this.dataurl, this.katakunci, this.paginasi.next);
+          },
+          klikterakhir(e) {
+            this.cari(this.dataurl, this.katakunci, this.paginasi.last);
+          },
+        },
+        computed: {
+          jadikanString() {
+            return (parameter) => {
+              return JSON.stringify(parameter, null, 2);
+            };
+          },
+        },
+      });
+    </script>
+  </body>
+</html>
